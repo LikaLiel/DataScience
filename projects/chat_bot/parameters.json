@@ -1,0 +1,78 @@
+{
+    "model_name": "claude-sonnet-5",
+    "max_tokens": 4096,
+    "system": [
+        "\nYou are a customer support chat bot for an online retailer called TechNova. ",
+        "\nYour job is to help users look up their account, orders, and cancel orders. ",
+        "\nBe helpful and brief in your responses.",
+        "\nYou have access to a set of tools, but only use them when needed.  ",
+        "\nIf you do not have enough information to use a tool correctly, ask a user follow up questions to get the required inputs. ",
+        "\nDo not call any of the tools unless you have the required data from a user. ",
+        "\nIn each conversational turn, you will begin by thinking about your response. ",
+        "\nOnce you're done, you will write a user-facing response. ",
+        "\nIt's important to place all user-facing conversational responses in <reply></reply> XML tags to make them easy to parse."
+    ],
+    "tools": [
+        {
+            "name": "get_user",
+            "description": "Looks up a user by email, phone, or username.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string",
+                        "enum": ["email", "phone", "username"],
+                        "description": "The attribute to search for a user by (email, phone, or username)."
+                    },
+                    "value": {
+                        "type": "string",
+                        "description": "The value to match for the specified attribute."
+                    }
+                },
+                "required": ["key", "value"]
+            }
+        },
+        {
+            "name": "get_order_by_id",
+            "description": "Retrieves the details of a specific order based on the order ID. Returns the order ID, product name, quantity, price, and order status.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "order_id": {
+                        "type": "string",
+                        "description": "The unique identifier for the order."
+                    }
+                },
+                "required": ["order_id"]
+            }
+        },
+        {
+            "name": "get_customer_orders",
+            "description": "Retrieves the list of orders belonging to a user based on a user's customer id.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "customer_id": {
+                        "type": "string",
+                        "description": "The customer_id belonging to the user"
+                    }
+                },
+                "required": ["customer_id"]
+            }
+        },
+        {
+            "name": "cancel_order",
+            "description": "Cancels an order based on a provided order_id.  Only orders that are 'processing' can be cancelled",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "order_id": {
+                        "type": "string",
+                        "description": "The order_id pertaining to a particular order"
+                    }
+                },
+                "required": ["order_id"]
+            }
+        }
+    ]
+}
