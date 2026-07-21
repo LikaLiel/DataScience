@@ -3,19 +3,22 @@ import anthropic
 import json
 from projects.chat_bot.database import FakeDatabase
 from pathlib import Path
-
+import os
+from dotenv import load_dotenv
 
 def simple_chat():
     # initisalize the anthropic client and the database instance
     config_path = Path(__file__).parent / "parameters.json"
     config = json.load(open(config_path))
-    client = anthropic.Client()
+    env_path = Path(__file__).parent.parent.parent / ".env"
+    load_dotenv(dotenv_path=env_path)   # reads .env and populates os.environ
+    client = anthropic.Client(api_key=os.getenv("ANTHROPIC_API_KEY"))
     db_instance = FakeDatabase()
 
     user_message = input("\nUser: ")
     messages = [{"role": "user", "content": user_message}]
     
-    while True:
+    while user_message.lower() not in ["exit", "quit", "bye", "goodbye", "q"]:
         #If the last message is from the assistant, get another input from the user
         if messages[-1].get("role") == "assistant":
             user_message = input("\nUser: ")
