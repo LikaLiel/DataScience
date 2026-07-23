@@ -6,7 +6,6 @@ from core.chat import Chat
 from core.claude import Claude
 from mcp_client import MCPClient
 
-
 class CliChat(Chat):
     def __init__(
         self,
